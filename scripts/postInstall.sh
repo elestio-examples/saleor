@@ -5,3 +5,8 @@ set -o allexport; source .env; set +o allexport;
 echo "Waiting for software to be ready ..."
 sleep 60s;
 
+docker-compose exec -T saleor bash -c "python3 manage.py migrate"
+
+docker-compose exec -T saleor bash -c "python3 manage.py populatedb"
+
+# docker-compose exec -T saleor bash -c "python3 manage.py createsuperuser"

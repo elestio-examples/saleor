@@ -10,6 +10,8 @@ services:
     depends_on:
       - db
       - redis
+    ports:
+      - 172.17.0.1:63955:8000
 
   dashboard:
     image: ghcr.io/saleor/saleor-dashboard:${SOFTWARE_VERSION_TAG}

@@ -9,6 +9,14 @@ ports:
     isAuth: false
   - protocol: "HTTPS"
     targetProtocol: "HTTP"
+    listeningPort: "20940"
+    targetPort: "63955"
+    targetIP: "172.17.0.1"
+    public: true
+    path: "/"
+    isAuth: false
+  - protocol: "HTTPS"
+    targetProtocol: "HTTP"
     listeningPort: "60128"
     targetPort: "18589"
     targetIP: "172.17.0.1"
@@ -38,7 +46,7 @@ environments:
   - key: "PUBLIC_URL"
     value: "https://[CI_CD_DOMAIN]"
   - key: "API_URL"
-    value: "https://[CI_CD_DOMAIN]/graphql/"
+    value: "https://[CI_CD_DOMAIN]:20940/graphql/"
   - key: "DEFAULT_FROM_EMAIL"
     value: "[DOMAIN]@vm.elestio.app"
   - key: "CELERY_BROKER_URL"
