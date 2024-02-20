@@ -1,0 +1,50 @@
+version: "3.4"
+
+services:
+  saleor:
+    image: ghcr.io/saleor/saleor:${SOFTWARE_VERSION_TAG}
+    restart: always
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+      - redis
+
+  dashboard:
+    image: ghcr.io/saleor/saleor-dashboard:${SOFTWARE_VERSION_TAG}
+    restart: always
+    env_file:
+      - ./.env
+    ports:
+      - 172.17.0.1:28181:80
+
+  db:
+    image: elestio/postgres:15
+    restart: always
+    volumes:
+      - ./saleor-db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "172.17.0.1:24673:5432"
+
+  redis:
+    image: elestio/redis:7.0
+    restart: always
+    volumes:
+      - ./saleor-redis:/data
+
+  pgadmin:
+    image: elestio/pgadmin:latest
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${ADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${ADMIN_PASSWORD}
+      PGADMIN_LISTEN_PORT: 8080
+    ports:
+      - "172.17.0.1:18589:8080"
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json
