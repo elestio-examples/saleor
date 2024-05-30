@@ -10,8 +10,13 @@ services:
     depends_on:
       - db
       - redis
+      - jaeger
     ports:
       - 172.17.0.1:63955:8000
+    environment:
+      - JAEGER_AGENT_HOST=jaeger
+      - DASHBOARD_URL=http://${DOMAIN}/
+      - ALLOWED_HOSTS=localhost,api
 
   dashboard:
     image: ghcr.io/saleor/saleor-dashboard:${SOFTWARE_VERSION_TAG}
@@ -26,6 +31,7 @@ services:
     restart: always
     volumes:
       - ./saleor-db:/var/lib/postgresql/data
+      - ./replica_user.sql:/docker-entrypoint-initdb.d/replica_user.sql
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -38,6 +44,33 @@ services:
     restart: always
     volumes:
       - ./saleor-redis:/data
+
+  worker:
+    image: ghcr.io/saleor/saleor:${SOFTWARE_VERSION_TAG}
+    command: celery -A saleor --app=saleor.celeryconf:app worker --loglevel=info -B
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    volumes:
+      # shared volume between worker and api for media
+      - ./saleor-media:/app/media
+
+  jaeger:
+    image: jaegertracing/all-in-one
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "9411:9411"
+    restart: always
+    volumes:
+      - type: tmpfs
+        target: /tmp
 
   pgadmin:
     image: elestio/pgadmin:latest
