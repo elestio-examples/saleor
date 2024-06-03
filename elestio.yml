@@ -59,6 +59,8 @@ environments:
     value: "smtp://172.17.0.1:25"
   - key: "IP"
     value: "[IP]"
+  - key: "ENABLE_SSL"
+    value: "True"
 config:
   runTime: "dockerCompose"
   version: ""

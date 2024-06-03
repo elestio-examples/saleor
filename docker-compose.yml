@@ -22,7 +22,7 @@ services:
     #   - saleor-backend-tier
 
   dashboard:
-    image: ghcr.io/saleor/saleor-dashboard:latest
+    image: ghcr.io/saleor/saleor-dashboard:${SOFTWARE_VERSION_TAG}
     restart: always
     env_file:
       - ./.env
