@@ -61,6 +61,8 @@ environments:
     value: "[IP]"
   - key: "ENABLE_SSL"
     value: "True"
+  - key: "ALLOWED_CLIENT_HOSTS"
+    value: "[CI_CD_DOMAIN]"
 config:
   runTime: "dockerCompose"
   version: ""
