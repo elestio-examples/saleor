@@ -40,7 +40,7 @@ else
     -H 'pragma: no-cache' \
     -H 'priority: u=1, i' \
     -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36' \
-    --data-raw '{"query":"mutation UpdateDomain {\n  shopDomainUpdate(input: {domain: \"s'${DOMAIN}':20940\"}) {\n    shop {\n      domain {\n        url\n      }\n    }\n  }\n}\n\n","operationName":"UpdateDomain"}'
+    --data-raw '{"query":"mutation UpdateDomain {\n  shopDomainUpdate(input: {domain: \"'${DOMAIN}':20940\"}) {\n    shop {\n      domain {\n        url\n      }\n    }\n  }\n}\n\n","operationName":"UpdateDomain"}'
 
     #     sed -i "s~  listen 443 ssl http2;~  \
     #     location /media/ { \\
