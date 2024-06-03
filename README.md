@@ -13,7 +13,7 @@ Deploy Saleor with CI/CD on Elestio
 You can open Saleor here:
 
     https://[CI_CD_DOMAIN]/
-    Login: admin
+    Login: [ADMIN_EMAIL]
     password: [ADMIN_PASSWORD]
 
 You can open pgAdmin web UI here:

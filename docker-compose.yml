@@ -1,12 +1,13 @@
 version: "3.4"
 
 services:
-  saleor:
+  api:
     image: ghcr.io/saleor/saleor:${SOFTWARE_VERSION_TAG}
     restart: always
-    command: /bin/sh -c "while sleep 1000; do :; done"
     env_file:
       - ./.env
+    volumes:
+      - ./saleor-media:/app/media
     depends_on:
       - db
       - redis
@@ -15,16 +16,20 @@ services:
       - 172.17.0.1:63955:8000
     environment:
       - JAEGER_AGENT_HOST=jaeger
-      - DASHBOARD_URL=http://${DOMAIN}/
-      - ALLOWED_HOSTS=localhost,api
+      - DASHBOARD_URL=https://${DOMAIN}/
+      - ALLOWED_HOSTS=localhost,api,${DOMAIN},${IP}
+    # networks:
+    #   - saleor-backend-tier
 
   dashboard:
-    image: ghcr.io/saleor/saleor-dashboard:${SOFTWARE_VERSION_TAG}
+    image: ghcr.io/saleor/saleor-dashboard:latest
     restart: always
     env_file:
       - ./.env
     ports:
       - 172.17.0.1:28181:80
+    # networks:
+    #   - saleor-backend-tier
 
   db:
     image: elestio/postgres:15
@@ -38,12 +43,16 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     ports:
       - "172.17.0.1:24673:5432"
+    # networks:
+    #   - saleor-backend-tier
 
   redis:
     image: elestio/redis:7.0
     restart: always
     volumes:
       - ./saleor-redis:/data
+    # networks:
+    #   - saleor-backend-tier
 
   worker:
     image: ghcr.io/saleor/saleor:${SOFTWARE_VERSION_TAG}
@@ -56,6 +65,8 @@ services:
     volumes:
       # shared volume between worker and api for media
       - ./saleor-media:/app/media
+    # networks:
+    #   - saleor-backend-tier
 
   jaeger:
     image: jaegertracing/all-in-one
@@ -71,6 +82,8 @@ services:
     volumes:
       - type: tmpfs
         target: /tmp
+    # networks:
+    #   - saleor-backend-tier
 
   pgadmin:
     image: elestio/pgadmin:latest
@@ -83,3 +96,9 @@ services:
       - "172.17.0.1:18589:8080"
     volumes:
       - ./servers.json:/pgadmin4/servers.json
+#     networks:
+#       - saleor-backend-tier
+
+# networks:
+#   saleor-backend-tier:
+#     driver: bridge
