@@ -42,24 +42,7 @@ else
     -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36' \
     --data-raw '{"query":"mutation UpdateDomain {\n  shopDomainUpdate(input: {domain: \"'${DOMAIN}':20940\"}) {\n    shop {\n      domain {\n        url\n      }\n    }\n  }\n}\n\n","operationName":"UpdateDomain"}'
 
-    #     sed -i "s~  listen 443 ssl http2;~  \
-    #     location /media/ { \\
-    #         proxy_pass http://172.17.0.1:63955/media/; \\
-    #         proxy_set_header Host \\\$host; \\
-    #         proxy_set_header X-Real-IP \\\$remote_addr; \\
-    #         proxy_set_header X-Forwarded-For \\\$proxy_add_x_forwarded_for; \\
-    #         proxy_set_header X-Forwarded-Proto \\\$scheme; \\
-    #     } \\
-    #     location /thumbnail/ { \\
-    #         proxy_pass http://172.17.0.1:63955/thumbnail/; \\
-    #         proxy_set_header Host \\\$host; \\
-    #         proxy_set_header X-Real-IP \\\$remote_addr; \\
-    #         proxy_set_header X-Forwarded-For \\\$proxy_add_x_forwarded_for; \\
-    #         proxy_set_header X-Forwarded-Proto \\\$scheme; \\
-    #     } \\
-    #     listen 443 ssl http2;~g" /opt/elestio/nginx/conf.d/${DOMAIN}.conf
 
-    #   docker exec elestio-nginx nginx -s reload;
 
     docker-compose down;
     docker-compose up -d;
